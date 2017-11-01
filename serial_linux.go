@@ -7,9 +7,11 @@ import (
 	"syscall"
 	"time"
 	"unsafe"
+
+	"golang.org/x/sys/unix"
 )
 
-func openPort(name string, baud int, databits byte, parity Parity, stopbits StopBits, readTimeout time.Duration) (p *Port, err error) {
+func openPort(name string, baud int, databits byte, parity Parity, stopbits StopBits, readTimeout time.Duration, rtsFlow bool) (p *Port, err error) {
 	var bauds = map[int]uint32{
 		50:      syscall.B50,
 		75:      syscall.B75,
@@ -96,6 +98,12 @@ func openPort(name string, baud int, databits byte, parity Parity, stopbits Stop
 	default:
 		return nil, ErrBadParity
 	}
+
+	//RTS flow. Only on linux?
+	if rtsFlow {
+		cflagToUse |= unix.CRTSCTS
+	}
+
 	fd := f.Fd()
 	vmin, vtime := posixTimeoutValues(readTimeout)
 	t := syscall.Termios{

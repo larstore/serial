@@ -108,7 +108,7 @@ type Config struct {
 	// Number of stop bits to use. Default is 1 (1 stop bit).
 	StopBits StopBits
 
-	// RTSFlowControl bool
+	RTSFlowControl bool
 	// DTRFlowControl bool
 	// XONFlowControl bool
 
@@ -136,7 +136,7 @@ func OpenPort(c *Config) (*Port, error) {
 	if stop == 0 {
 		stop = Stop1
 	}
-	return openPort(c.Name, c.Baud, size, par, stop, c.ReadTimeout)
+	return openPort(c.Name, c.Baud, size, par, stop, c.ReadTimeout, c.RTSFlowControl)
 }
 
 // Converts the timeout values for Linux / POSIX systems
