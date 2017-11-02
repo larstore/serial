@@ -99,7 +99,7 @@ func openPort(name string, baud int, databits byte, parity Parity, stopbits Stop
 		return nil, ErrBadParity
 	}
 
-	//RTS flow. Only on linux?
+	//RTS flow control
 	if rtsFlow {
 		cflagToUse |= unix.CRTSCTS
 	}

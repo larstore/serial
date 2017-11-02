@@ -126,6 +126,11 @@ func openPort(name string, baud int, databits byte, parity Parity, stopbits Stop
 	default:
 		return nil, ErrBadStopBits
 	}
+	//RTS flow control
+	if rtsFlow {
+		st.c_cflag |= C.CRTSCTS
+	}
+
 	// Select raw mode
 	st.c_lflag &= ^C.tcflag_t(C.ICANON | C.ECHO | C.ECHOE | C.ISIG)
 	st.c_oflag &= ^C.tcflag_t(C.OPOST)

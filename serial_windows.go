@@ -3,6 +3,7 @@
 package serial
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"sync"
@@ -38,6 +39,10 @@ type structTimeouts struct {
 }
 
 func openPort(name string, baud int, databits byte, parity Parity, stopbits StopBits, readTimeout time.Duration, rtsFlow bool) (p *Port, err error) {
+
+	if rtsFlow {
+		return errors.new("RTS/CTS flow control not supported")
+	}
 	if len(name) > 0 && name[0] != '\\' {
 		name = "\\\\.\\" + name
 	}
